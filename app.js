@@ -1,24 +1,21 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
 
  import React, { Component } from 'react';
  import {
-   AppRegistry,
    StyleSheet,
    Text,
    View,
-   Image,
-   Platform,
-   StatusBar,
+   Image
  } from 'react-native';
 
  //引入tabbar支持包
  import TabNavigator from 'react-native-tab-navigator';
+
 //首页
  import Home from './view/Home';
+ import Video from './view/Video';
+ import Follow from './view/Follow';
+ import Mine from './view/Mine';
+
 
  const TabNavigatorItem =TabNavigator.Item;
 
@@ -32,7 +29,7 @@
  const TAB_PRESS_3=require('./images/tabbar_3_press.png');
  const TAB_PRESS_4=require('./images/tabbar_4_press.png');
 
- export default class toutiao extends Component {
+ export default class haofeng extends Component {
 
    constructor(){
      super();
@@ -56,9 +53,10 @@
     /**
     渲染每项
     **/
-    renderTabView(title,tabName,tabContent,isBadge){
+    renderTabBar(title,tabName,tabContent){
       var tabNomal;
       var tabPress;
+     
       switch (tabName) {
         case 'Home':
           tabNomal=TAB_NORMAL_1;
@@ -67,6 +65,7 @@
       case 'Video':
         tabNomal=TAB_NORMAL_2;
         tabPress=TAB_PRESS_2;
+
         break;
       case 'Follow':
         tabNomal=TAB_NORMAL_3;
@@ -79,7 +78,23 @@
         default:
 
       }
-      return(
+
+      let content = null;
+
+      if (tabName=='Home') {
+          content = <Home/>
+         }else if (tabName =='Video')
+         {
+            content =  <Video/>
+         }else if(tabName =='Follow')
+         {
+            content =  <Follow/>
+         }else
+         {
+           content =  <Mine/>
+         }
+        console.log(tabName);
+       return(
         <TabNavigatorItem
          title={title}
          renderIcon={()=><Image style={styles.tabIcon} source={tabNomal}/>}
@@ -87,16 +102,15 @@
          selected={this.state.selectedTab===tabName}
          selectedTitleStyle={{color:'#f85959'}}
          onPress={()=>this.onPress(tabName)}
-         renderBadge={()=>isBadge?<View style={styles.badgeView}><Text style={styles.badgeText}>15</Text></View>:null}
         >
         {
-          tabName=='Home'?<Home/>:
-          <View style={{flex:1,justifyContent:'center',alignItems:'center'}}><Text>{tabContent}</Text></View>
+         content
         }
         </TabNavigatorItem>
       );
     }
 
+    
     /**
     自定义tabbar
     **/
@@ -106,10 +120,10 @@
        <TabNavigator
         tabBarStyle={styles.tab}
        >
-       {this.renderTabView('头条','Home','头条板块',true)}
-       {this.renderTabView('视频','Video','视频板块',false)}
-       {this.renderTabView('关注','Follow','关注板块',false)}
-       {this.renderTabView('我的','Mine','我的板块',false)}
+       {this.renderTabBar('头条','Home','头条板块',true)}
+       {this.renderTabBar('视频','Video','视频板块',false)}
+       {this.renderTabBar('关注','Follow','关注板块',false)}
+       {this.renderTabBar('我的','Mine','我的板块',false)}
        </TabNavigator>
        </View>
      );
@@ -127,7 +141,7 @@
  }
 
  const styles = StyleSheet.create({
-   container: {
+    container: {
      flex: 1,
      backgroundColor: '#F5FCFF',
 
@@ -151,20 +165,4 @@
      width:25,
      height:25,
    },
-   badgeView:{
-     width:22,
-     height:14 ,
-     backgroundColor:'#f85959',
-     borderWidth:1,
-     marginLeft:10,
-     marginTop:5,
-     borderColor:'#FFF',
-     alignItems:'center',
-     justifyContent:'center',
-     borderRadius:8,
-   },
-   badgeText:{
-     color:'#fff',
-     fontSize:8,
-   }
  });
